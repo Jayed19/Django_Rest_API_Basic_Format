@@ -1,0 +1,102 @@
+Step0: Verify the virtual environment activate or not. CMD: pipenv shell
+
+Step1: Go to \qabd\backend\qabdbackend and run CMD:
+python manage.py createsuperuser
+
+Step2: create a file serializers.py inside the 'users' app directory. Write Code:
+from rest_framework import serializers
+
+Problem: Import "rest_framework" could not be resolved.
+Solution: If you are using VSCode, Ctrl + Shift + P -> Type and select 'Python: Select Interpreter' and enter into your projects virtual environment.
+
+*****serializers.py **********
+
+from rest_framework import serializers
+from django.contrib.auth.models import User
+
+class UserSerializers(serializers.ModelSerializer): #inherit functions from ModelSerializer class
+    password=serializers.CharField(min_length=8, write_only=True)
+
+    class Meta: # For Model indicate
+        model=User
+        fields=('username', 'email', 'password')
+
+
+Step3: ***** views.py*******
+from django.shortcuts import render
+
+# Create your views here.
+from rest_framework.views import APIView # Handle HTTP Requests
+from rest_framework.response import Response
+from django.contrib.auth.models import User 
+from .serializers import UserSerializers #import UserSerializer class from serializers.py file
+
+class UsersAPIView(APIView): # Inherit all functions from APIView Class
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserSerializers(users, many = True)
+        return Response(serializer.data) # Serializer used for converting to JSON format
+    
+    def post(self, request):
+        serializer = UserSerializers(data = request.data)
+        if serializer.is_valid():
+            serializer.save() # Save in the database
+            return Response(serializer.data, status = 201) # Created status code 201
+        return Response(serializer.errors, status = 400) # Error status code 400, means server error
+
+
+
+Step4: create urls.py file and content of ******urls.py******:
+from django.urls import path,include
+from .views import UsersAPIView
+
+urlpatterns = [
+    path('', UsersAPIView.as_view()),
+]
+
+
+Step5: Now Edit file ******\qabd\backend\qabdbackend\qabdbackend\urls.py************
+
+from django.contrib import admin
+from django.urls import path,include
+from users import urls as users_urls
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("api/users/", include(users_urls)),
+]
+
+
+
+Step6: Test the API: CMD:
+pipenv shell
+python manage.py runserver
+
+
+Step7: Check the API now: http://127.0.0.1:8000/api/users/
+
+
+Step8: Create a User and check login with click on the 'Login' link of this page. Login will be failed due to plain password saved in the database. To make the password encrypted sha256 have to use a function in the *******serializers.py******** file.
+
+from rest_framework import serializers
+from django.contrib.auth.models import User
+
+class UserSerializers(serializers.ModelSerializer): #inherit functions from ModelSerializer class
+    password=serializers.CharField(min_length=8, write_only=True)
+
+    def create(self, validated_data): # This is for making password encrypted
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
+    
+    class Meta: # For Model indicate
+        model=User
+        fields=('username', 'email', 'password')
+
+
+
+
