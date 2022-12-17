@@ -1,0 +1,57 @@
+Step0: Go to your working directory(backend folder) and run all steps here.
+
+Step1: CMD:
+pip install pipenv
+pipenv shell
+
+Step2: open Pipfile and verify the python version 
+[requires]
+python_version = "3.8"
+
+Step3: CMD:
+pipenv install django djangorestframework
+
+Step4: django-admin startproject qabdbackend .
+[Note: here dot means current directory]
+
+Step5: CMD: cd qabdbackend and then create app
+python manage.py startapp users
+python manage.py startapp projects
+
+Step6: Go qabdbackend/qabdbackend/setting.py
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "users",
+    "projects",
+]
+
+and add in the last line:
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10
+}
+
+
+Step7: Go qabdbackend/qabdbackend/urls.py and edit the file:
+from django.urls import path, include
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+]
+
+Step8: Now Migrate the database with below commands:
+python manage.py makemigrations
+python manage.py migrate
+
+Step9: Run the Server: CMD:
+python manage.py runserver
+
+Step10: Now you can browse:
+http://127.0.0.1:8000
