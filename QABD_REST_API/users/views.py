@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 # Create your views here.
 from rest_framework.views import APIView # Handle HTTP Requests
 from rest_framework.response import Response
@@ -18,3 +17,6 @@ class UsersAPIView(APIView): # Inherit all functions from APIView Class
             serializer.save() # Save in the database
             return Response(serializer.data, status = 201) # Created status code 201
         return Response(serializer.errors, status = 400) # Error status code 400, means server error
+
+
+

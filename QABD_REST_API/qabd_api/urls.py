@@ -1,4 +1,4 @@
-"""qabdbackend URL Configuration
+"""qabd_api URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -22,3 +22,4 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api/users/", include(users_urls)),
 ]
+
