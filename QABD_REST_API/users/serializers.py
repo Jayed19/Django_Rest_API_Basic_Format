@@ -19,7 +19,7 @@ class UserSerializers(serializers.ModelSerializer): #inherit functions from Mode
     
     class Meta: # For Model indicate
         model=User
-        fields=('username', 'email', 'password')
+        fields=('id','username', 'email', 'password')
 
 
 
