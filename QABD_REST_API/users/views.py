@@ -6,7 +6,10 @@ from django.contrib.auth.models import User
 from .serializers import UserSerializers #import UserSerializer class from serializers.py file
 from django.http import Http404
 from rest_framework import status
+from rest_framework.generics import ListAPIView,RetrieveAPIView
 
+
+# For POST Method and Get All Method
 class UsersAPIView(APIView): # Inherit all functions from APIView Class
     def get(self, request):
         users = User.objects.all()
@@ -21,6 +24,7 @@ class UsersAPIView(APIView): # Inherit all functions from APIView Class
         return Response(serializer.errors, status = 400) # Error status code 400, means server error
 
 
+#For Directly One Item Get, Delete and PUT method
 
 class SnippetDetail(APIView):
     """
@@ -49,3 +53,20 @@ class SnippetDetail(APIView):
         snippet = self.get_object(pk)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+# For Partial Search with Non Primary Key Field
+class PartialUserName(ListAPIView):
+    serializer_class = UserSerializers
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        return User.objects.filter(username__icontains=username) # for matching case insensative any match url like http://127.0.0.1:8000/api/users/field/jayed/
+        
+        #return User.objects.filter(username__startswith=username) # for start with Match
+        
+        #return User.objects.filter(username=username) # For Exact match
+
+
