@@ -9,27 +9,24 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView,RetrieveAPIView
 
 
-# For POST Method and Get All Method
-class UsersAPIView(APIView): # Inherit all functions from APIView Class
+# POST Method and Get All Method
+class UserPostRequest(APIView): # Inherit all functions from builtIn APIView Class
     def get(self, request):
-        users = User.objects.all()
-        serializer = UserSerializers(users, many = True)
+        user_all = User.objects.all() # All User will show from User table. Pagination mentioned in the qabd_api/settings.py file
+        serializer = UserSerializers(user_all, many = True) # check the serializers.py file for checking this UserSerializers class
         return Response(serializer.data) # Serializer used for converting to JSON format
     
     def post(self, request):
-        serializer = UserSerializers(data = request.data)
+        serializer = UserSerializers(data = request.data) # POST Request data will be store in data variable and serializer object creted with this data
         if serializer.is_valid():
             serializer.save() # Save in the database
             return Response(serializer.data, status = 201) # Created status code 201
         return Response(serializer.errors, status = 400) # Error status code 400, means server error
 
 
-#For Directly One Item Get, Delete and PUT method
+# Directly One Item Get, Delete and PUT method with Primary Key. Here primary key is 'ID' of User table.
+class UserGetPutDelete(APIView):# Inherit all functions from builtIn APIView Class
 
-class SnippetDetail(APIView):
-    """
-    Retrieve, update or delete a snippet instance.
-    """
     def get_object(self, pk):
         try:
             return User.objects.get(pk=pk)
@@ -57,15 +54,15 @@ class SnippetDetail(APIView):
 
 
 
-# For Partial Search with Non Primary Key Field
-class PartialUserName(ListAPIView):
+# Partial Search with Non Primary Key Field
+class SearchUserName(ListAPIView):
     serializer_class = UserSerializers
 
     def get_queryset(self):
         username = self.kwargs['username']
-        return User.objects.filter(username__icontains=username) # for matching case insensative any match url like http://127.0.0.1:8000/api/users/field/jayed/
+        return User.objects.filter(username__icontains=username) # For case insensative matching. URL like http://127.0.0.1:8000/users/search/username/jayed/
         
-        #return User.objects.filter(username__startswith=username) # for start with Match
+        #return User.objects.filter(username__startswith=username) # For starting text Match
         
         #return User.objects.filter(username=username) # For Exact match
 

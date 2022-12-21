@@ -15,11 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from users import urls as users_urls
+from users import urls as users_urls # Import sub url path from users/urls.py file
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path("api/users/", include(users_urls)),
+    path("users/", include(users_urls)), # All Users related link will be used http://127.0.0.1:8000/users/ this link and sub path will be come from users/urls.py file
 ]
 
