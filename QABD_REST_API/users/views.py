@@ -40,7 +40,8 @@ class UserGetPutDelete(APIView):# Inherit all functions from builtIn APIView Cla
 
     def put(self, request, pk, format=None):
         snippet = self.get_object(pk)
-        serializer = UserSerializers(snippet, data=request.data)
+        #serializer = UserSerializers(snippet, data=request.data)
+        serializer = UserSerializers(snippet, data=request.data,partial=True) #partial=True means single field possible to change
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -59,7 +60,7 @@ class SearchUserName(ListAPIView):
     serializer_class = UserSerializers
 
     def get_queryset(self):
-        username = self.kwargs['username']
+        username = self.kwargs['username'] # ['username'] same like table column name
         return User.objects.filter(username__icontains=username) # For case insensative matching. URL like http://127.0.0.1:8000/users/search/username/jayed/
         
         #return User.objects.filter(username__startswith=username) # For starting text Match
@@ -67,3 +68,27 @@ class SearchUserName(ListAPIView):
         #return User.objects.filter(username=username) # For Exact match
 
 
+# Partial Search with Non Primary Key Field
+class SearchFullName(ListAPIView):
+    serializer_class = UserSerializers
+
+    def get_queryset(self):
+        Fname = self.kwargs['first_name'] # here ['first_name'] this is the same as table column name. We used first_name as full_name here.
+        return User.objects.filter(first_name__icontains=Fname) # For case insensative matching. URL like http://127.0.0.1:8000/users/search/username/jayed/
+        
+        #return User.objects.filter(username__startswith=username) # For starting text Match
+        
+        #return User.objects.filter(username=username) # For Exact match
+
+
+# Partial Search with Non Primary Key Field
+class SearchEmail(ListAPIView):
+    serializer_class = UserSerializers
+
+    def get_queryset(self):
+        E_mail = self.kwargs['email'] # here ['email'] this is the same as table column name. We used first_name as full_name here.
+        return User.objects.filter(email__icontains=E_mail) # For case insensative matching. URL like http://127.0.0.1:8000/users/search/username/jayed/
+        
+        #return User.objects.filter(username__startswith=username) # For starting text Match
+        
+        #return User.objects.filter(username=username) # For Exact match

@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 class UserSerializers(serializers.ModelSerializer): #inherit functions from ModelSerializer class
     password=serializers.CharField(min_length=8, write_only=True)
-    
+    full_name=serializers.CharField(source='first_name')
 
     def create(self, validated_data): # This is for making password encrypted
         password = validated_data.pop('password', None)
@@ -20,7 +20,7 @@ class UserSerializers(serializers.ModelSerializer): #inherit functions from Mode
     
     class Meta: # For Model indicate
         model=User
-        fields=('id','username', 'email', 'password','first_name')
+        fields=('id','username', 'email', 'password','full_name')
 
 
 
