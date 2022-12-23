@@ -8,9 +8,11 @@ from django.http import Http404
 from rest_framework import status
 from rest_framework.generics import ListAPIView,RetrieveAPIView
 from .paginators import CustomPagination
+from rest_framework.permissions import IsAuthenticated
 
 # POST Method and Get All Method
 class UserPostRequest(APIView): # Inherit all functions from builtIn APIView Class
+    permission_classes = (IsAuthenticated,) # Authentication added Step1
     #Pagination code started
     pagination_class = CustomPagination
     @property
