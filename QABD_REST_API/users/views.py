@@ -8,11 +8,12 @@ from django.http import Http404
 from rest_framework import status
 from rest_framework.generics import ListAPIView,RetrieveAPIView
 from .paginators import CustomPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 
 # POST Method and Get All Method
 class UserPostRequest(APIView): # Inherit all functions from builtIn APIView Class
-    permission_classes = (IsAuthenticated,) # Authentication added Step1
+    #permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     #Pagination code started
     pagination_class = CustomPagination
     @property
@@ -102,7 +103,7 @@ class SearchUserName(ListAPIView):
 # Partial Search with Non Primary Key Field
 class SearchFullName(ListAPIView):
     serializer_class = UserSerializers
-
+    pagination_class = CustomPagination #Only one line code inside the class incase of ListAPIView
     def get_queryset(self):
         Fname = self.kwargs['first_name'] # here ['first_name'] this is the same as table column name. We used first_name as full_name here.
         return User.objects.filter(first_name__icontains=Fname) # For case insensative matching. URL like http://127.0.0.1:8000/users/search/username/jayed/
@@ -115,7 +116,7 @@ class SearchFullName(ListAPIView):
 # Partial Search with Non Primary Key Field
 class SearchEmail(ListAPIView):
     serializer_class = UserSerializers
-
+    pagination_class = CustomPagination #Only one line code inside the class incase of ListAPIView
     def get_queryset(self):
         E_mail = self.kwargs['email'] # here ['email'] this is the same as table column name. We used first_name as full_name here.
         return User.objects.filter(email__icontains=E_mail) # For case insensative matching. URL like http://127.0.0.1:8000/users/search/username/jayed/

@@ -16,12 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from users import urls as users_urls # Import sub url path from users/urls.py file
-from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView # JWT token step2
+#from rest_framework.authentication import TokenAuthentication
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    #path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path('api-token-auth/', obtain_auth_token, name='api_token_auth'), #Step4 for auth token and step5 you have run cmd: python manage.py makemigrations and python manage.py migrate
+    path("jwt_auth/", TokenObtainPairView.as_view()), #JWT token Step3. This token is bearer token can be used in Other request
+    path("jwt_auth/refresh/", TokenRefreshView.as_view()),
     path("users/", include(users_urls)), # All Users related link will be used http://127.0.0.1:8000/users/ this link and sub path will be come from users/urls.py file
 ]
 

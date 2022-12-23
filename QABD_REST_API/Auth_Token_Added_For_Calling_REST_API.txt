@@ -1,1 +1,107 @@
-Step1: 
+Step1: pip install djangorestframework_simplejwt [for installing bearer token]
+Step2: Add "rest_framework_simplejwt" in the INSTALLED_APPS in the settings.py file
+
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "users",
+    "rest_framework_simplejwt",
+]
+
+Step3: Also add configuration info in the settings.py file
+
+
+#JWT Token Configuration. Step4
+TIME_ZONE='Asia/Dhaka'
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+
+Step4: Also add default authentication class and default permission class in the settings.py file
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 5,
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+
+    ),
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+Step5: import those in the urls.py file
+
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView 
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("jwt_auth/", TokenObtainPairView.as_view()),
+    path("jwt_auth/refresh/", TokenRefreshView.as_view()),
+
+]
+
+
+Step6: Add Authentication permission require in the views.py file
+
+from rest_framework.permissions import IsAuthenticated,AllowAny
+
+# POST Method and Get All Method
+class UserPostRequest(APIView): # Inherit all functions from builtIn APIView Class
+    #permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+
+
+Step7: In the settings.py file add session token in the REST_FRAMEWORK section for supportign browsing session. For Postman we will use bearer token.
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 5,
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+
+    ),
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+	  'rest_framework.authentication.SessionAuthentication', 
+    ]
+}
+
