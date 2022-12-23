@@ -10,7 +10,7 @@ class UserSerializers(serializers.ModelSerializer): #inherit functions from Mode
     password=serializers.CharField(min_length=8, write_only=True)
     full_name=serializers.CharField(source='first_name')
 
-    def create(self, validated_data): # This is for making password encrypted
+    def create(self, validated_data): # This is for making password encryption
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
         if password is not None:
@@ -20,7 +20,7 @@ class UserSerializers(serializers.ModelSerializer): #inherit functions from Mode
     
     class Meta: # For Model indicate
         model=User
-        fields=('id','username', 'email', 'password','full_name')
+        fields=('id','username', 'email', 'password','full_name','is_active')
 
 
 
