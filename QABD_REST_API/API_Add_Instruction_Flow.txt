@@ -1,0 +1,7 @@
+Step1: CMD: python manage.py startapp new_api
+Step2: Add new_api in INSTALLED_APP List of the settings.py file of qabd_api(Main App).
+Step3: In the models.py create a model for new_api. After coding run CMD: python manage.py makemigrations , then CMD: python manage.py migrate
+Step4: Add serializers.py file for this model JSON format response
+Step5: GET, POST, PUT, DELETE, SEARCH add in the views.py file
+Step6: Add url path and pattern in urls.py file
+Step7: Include main url path in the qabd_api(Main App)/urls.py file
