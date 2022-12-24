@@ -17,12 +17,13 @@ from django.contrib import admin
 from django.urls import path,include
 from users import urls as users_urls # Import sub url path from users/urls.py file
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView # JWT token step2
-#from rest_framework.authentication import TokenAuthentication
+from products import urls as product_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("jwt_auth/", TokenObtainPairView.as_view()), #JWT token Step3. This token is bearer token can be used in Other request
     path("jwt_auth/refresh/", TokenRefreshView.as_view()),
     path("users/", include(users_urls)), # All Users related link will be used http://127.0.0.1:8000/users/ this link and sub path will be come from users/urls.py file
+    path("products/", include(product_urls)),
 ]
 

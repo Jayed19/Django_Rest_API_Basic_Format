@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "users",
     "rest_framework_simplejwt", # Jwt token step1. Have to run cmd: pip install djangorestframework_simplejwt before add here.
+    "products",
 ]
 
 MIDDLEWARE = [
