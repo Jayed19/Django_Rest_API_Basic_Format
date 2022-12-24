@@ -10,4 +10,4 @@ class Products(models.Model):
     Creation_Date= models.DateTimeField(default=datetime.datetime.today, blank=True)
     Status= models.BooleanField(default=True)
     class Meta:
-        db_table = "Products"
+        db_table = "product"
