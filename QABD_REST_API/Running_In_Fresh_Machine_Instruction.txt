@@ -1,4 +1,4 @@
 Step1: Go to QABD_REST_API and CMD: pipenv install [This command will create virtual env from pipfile.lock]
 Step2: Activate the pipenv: CMD: pipenv shell
-Step3: CMD: CMD: pipenv install django djangorestframework
+Step3: CMD: pipenv install django djangorestframework djangorestframework_simplejwt
 Step4:CMD: python manage.py runserver
