@@ -1,4 +1,4 @@
-Step1: pip install djangorestframework_simplejwt [for installing bearer token]
+Step1: pipenv install djangorestframework_simplejwt [for installing bearer token]
 Step2: Add "rest_framework_simplejwt" in the INSTALLED_APPS in the settings.py file
 
 INSTALLED_APPS = [
